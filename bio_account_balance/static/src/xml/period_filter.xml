@@ -42,7 +42,7 @@
 
     <!-- Custom ListView - completely override template -->
     <t t-name="bio_account_balance.ListView" owl="1">
-        <div class="o_list_view o_view_controller">
+        <div class="o_list_view o_view_controller bio_report_scrollable_tree">
             <!-- Period Filter -->
             <PeriodFilter t-props="periodFilterProps"/>
 

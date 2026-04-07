@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Biosphera - Account Balance',
-    'version': '16.0.1.0.1',
+    'version': '16.0.2.0.1',
     'category': 'Accounting',
     'summary': 'Calculate and display opening/closing balances for account move lines',
     'description': """
         ODOO-834
     """,
     'author': 'Biosphera',
-    'website': 'https://bio.com',
     'license': 'LGPL-3',
     'depends': [
         'account',
@@ -31,5 +30,4 @@
     'installable': True,
     'application': False,
     'auto_install': False,
-    # 'post_init_hook': 'post_init_update_balances',
 }

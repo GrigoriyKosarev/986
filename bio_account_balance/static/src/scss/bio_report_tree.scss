@@ -1,0 +1,130 @@
+/**
+ * bio_report_tree.scss
+ *
+ * Purpose: Add vertical scrollbar to bio.account.move.line.report tree view
+ *
+ * Problem: Large datasets make the table too tall, no scrollbar appears
+ * Solution: Limit tree view height and enable vertical scroll
+ *
+ * Implementation:
+ * - Target .o_action_manager .o_list_view for all list views in actions
+ * - Limit height to viewport minus headers/filters
+ * - Add sticky header so column names stay visible while scrolling
+ */
+
+// ============================================================================
+// Main scrollable container for list views
+// ============================================================================
+
+.o_action_manager {
+    .o_list_view.bio_report_scrollable_tree {
+        // Container for the table
+        .o_list_renderer {
+            // Enable scrolling with max height
+            max-height: calc(100vh - 250px); // Viewport - header/search/footer
+            overflow-y: auto;  // Vertical scrollbar
+            overflow-x: auto;  // Horizontal scrollbar if table is wide
+            position: relative; // For sticky positioning
+
+            // Ensure table takes full width
+            .o_list_table {
+                min-width: 100%;
+            }
+
+            // Make header sticky during scroll
+            thead {
+                position: sticky;
+                top: 0;
+                z-index: 10;
+                background-color: #f8f9fa; // Match Odoo default
+
+                th {
+                    background-color: #f8f9fa;
+                    border-bottom: 2px solid #dee2e6;
+
+                    // Prevent header text from wrapping
+                    white-space: nowrap;
+                }
+            }
+
+            // Add shadow to header when scrolling
+            &.scrolled thead {
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+        }
+    }
+}
+
+// ============================================================================
+// Custom scrollbar styling (Webkit browsers: Chrome, Safari, Edge)
+// ============================================================================
+
+.o_action_manager .o_list_view.bio_report_scrollable_tree .o_list_renderer {
+    // Scrollbar track
+    &::-webkit-scrollbar {
+        width: 14px;   // Vertical scrollbar width (increased from 12px)
+        height: 14px;  // Horizontal scrollbar height (increased from 12px)
+    }
+
+    // Background of scrollbar track
+    &::-webkit-scrollbar-track {
+        background: #e9ecef;  // Slightly darker track
+        border-radius: 7px;
+        border: 1px solid #dee2e6;  // Border for better visibility
+    }
+
+    // Scrollbar thumb (draggable part)
+    &::-webkit-scrollbar-thumb {
+        background: #6c757d;  // Much darker (was #888)
+        border-radius: 7px;
+        border: 3px solid #e9ecef; // Padding around thumb
+
+        &:hover {
+            background: #495057;  // Even darker on hover (was #555)
+        }
+
+        &:active {
+            background: #212529;  // Almost black when dragging (was #333)
+        }
+    }
+
+    // Scrollbar corner (where vertical and horizontal meet)
+    &::-webkit-scrollbar-corner {
+        background: #e9ecef;
+    }
+}
+
+// ============================================================================
+// Firefox scrollbar styling
+// ============================================================================
+
+.o_action_manager .o_list_view.bio_report_scrollable_tree .o_list_renderer {
+    scrollbar-width: auto;  // Use default width (not thin) for better visibility
+    scrollbar-color: #6c757d #e9ecef;  // Darker thumb, lighter track
+}
+
+// ============================================================================
+// Responsive adjustments
+// ============================================================================
+
+// Smaller screens: reduce max height
+@media (max-height: 768px) {
+    .o_action_manager .o_list_view.bio_report_scrollable_tree .o_list_renderer {
+        max-height: calc(100vh - 200px);
+    }
+}
+
+// Very small screens: even less height
+@media (max-height: 600px) {
+    .o_action_manager .o_list_view.bio_report_scrollable_tree .o_list_renderer {
+        max-height: calc(100vh - 150px);
+    }
+}
+
+// Mobile: adjust for touch scrolling
+@media (max-width: 768px) {
+    .o_action_manager .o_list_view.bio_report_scrollable_tree .o_list_renderer {
+        max-height: calc(100vh - 180px);
+        -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+    }
+}

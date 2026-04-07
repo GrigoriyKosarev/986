@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Period Filter Widget Template -->
+    <t t-name="bio_account_balance.PeriodFilterWidget" owl="1">
+        <div class="bio_period_filter_widget">
+            <!-- Period Dropdown Button -->
+            <Dropdown>
+                <t t-set-slot="toggler">
+                    <button class="btn btn-secondary dropdown-toggle o_period_filter_button">
+                        <i class="fa fa-calendar me-1"/>
+                        <span>Period</span>
+                    </button>
+                </t>
+
+                <!-- Dropdown Items -->
+                <DropdownItem onSelected="() => this.onThisYear()">
+                    <i class="fa fa-calendar-o me-2"/>
+                    This Year
+                </DropdownItem>
+
+                <DropdownItem onSelected="() => this.onThisMonth()">
+                    <i class="fa fa-calendar me-2"/>
+                    This Month
+                </DropdownItem>
+
+                <DropdownItem onSelected="() => this.onLastMonth()">
+                    <i class="fa fa-calendar-minus-o me-2"/>
+                    Last Month
+                </DropdownItem>
+
+                <div class="dropdown-divider"/>
+
+                <DropdownItem onSelected="() => this.onCustomPeriod()">
+                    <i class="fa fa-calendar-plus-o me-2"/>
+                    Custom Period...
+                </DropdownItem>
+            </Dropdown>
+
+            <!-- Custom Date Picker Modal -->
+            <div t-if="state.showCustomModal"
+                 class="modal fade show d-block o_period_custom_modal"
+                 style="background-color: rgba(0,0,0,0.5);"
+                 tabindex="-1"
+                 t-on-click.self="onCancelCustom">
+
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <!-- Header -->
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fa fa-calendar me-2"/>
+                                Select Custom Period
+                            </h5>
+                            <button type="button"
+                                    class="btn-close"
+                                    t-on-click="onCancelCustom"
+                                    aria-label="Close"/>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="modal-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">From Date</label>
+                                    <input type="date"
+                                           class="form-control"
+                                           t-model="state.customStart"
+                                           required="1"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">To Date</label>
+                                    <input type="date"
+                                           class="form-control"
+                                           t-model="state.customEnd"
+                                           required="1"/>
+                                </div>
+                            </div>
+
+                            <!-- Info -->
+                            <div class="alert alert-info mt-3 mb-0">
+                                <i class="fa fa-info-circle me-2"/>
+                                <small>
+                                    Dates will be passed to SQL via session variables for fast filtering.
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="modal-footer">
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    t-on-click="onCancelCustom">
+                                Cancel
+                            </button>
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    t-on-click="onApplyCustom">
+                                <i class="fa fa-check me-1"/>
+                                Apply Period
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- Period Filter Button Template (Dropdown + Custom Modal) -->
+    <t t-name="bio_account_balance.PeriodFilterButton" owl="1">
+        <div class="bio_period_filter_button">
+            <!-- Period Dropdown -->
+            <Dropdown>
+                <t t-set-slot="toggler">
+                    <button class="btn btn-secondary dropdown-toggle o_period_filter_btn">
+                        <i class="fa fa-calendar me-1"/>
+                        <span>Period</span>
+                    </button>
+                </t>
+
+                <!-- Dropdown Items -->
+                <DropdownItem onSelected="() => this.onThisYear()">
+                    <i class="fa fa-calendar-o me-2"/>
+                    This Year
+                </DropdownItem>
+
+                <DropdownItem onSelected="() => this.onThisMonth()">
+                    <i class="fa fa-calendar me-2"/>
+                    This Month
+                </DropdownItem>
+
+                <DropdownItem onSelected="() => this.onLastMonth()">
+                    <i class="fa fa-calendar-minus-o me-2"/>
+                    Last Month
+                </DropdownItem>
+
+                <div class="dropdown-divider"/>
+
+                <DropdownItem onSelected="() => this.onCustomPeriod()">
+                    <i class="fa fa-calendar-plus-o me-2"/>
+                    Custom Period...
+                </DropdownItem>
+            </Dropdown>
+
+            <!-- Custom Date Picker Modal (same as PeriodFilterWidget) -->
+            <div t-if="state.showCustomModal"
+                 class="modal fade show d-block o_period_custom_modal"
+                 style="background-color: rgba(0,0,0,0.5);"
+                 tabindex="-1"
+                 t-on-click.self="onCancelCustom">
+
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">
+                                <i class="fa fa-calendar me-2"/>
+                                Select Custom Period
+                            </h5>
+                            <button type="button"
+                                    class="btn-close"
+                                    t-on-click="onCancelCustom"
+                                    aria-label="Close"/>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">From Date</label>
+                                    <input type="date"
+                                           class="form-control"
+                                           t-model="state.customStart"
+                                           required="1"/>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">To Date</label>
+                                    <input type="date"
+                                           class="form-control"
+                                           t-model="state.customEnd"
+                                           required="1"/>
+                                </div>
+                            </div>
+
+                            <div class="alert alert-info mt-3 mb-0">
+                                <i class="fa fa-info-circle me-2"/>
+                                <small>
+                                    Period will be applied via session variables for fast SQL filtering.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button"
+                                    class="btn btn-secondary"
+                                    t-on-click="onCancelCustom">
+                                Cancel
+                            </button>
+                            <button type="button"
+                                    class="btn btn-primary"
+                                    t-on-click="onApplyCustom">
+                                <i class="fa fa-check me-1"/>
+                                Apply Period
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_bio_account_move_line_view_all,bio.account.move.line.view all,model_bio_account_move_line_view,,1,0,0,0
+access_bio_account_move_line_view_readonly,bio.account.move.line.view readonly,model_bio_account_move_line_view,account.group_account_readonly,1,0,0,0
+access_bio_account_move_line_view_user,bio.account.move.line.view user,model_bio_account_move_line_view,account.group_account_user,1,0,0,0
+access_bio_account_move_line_view_manager,bio.account.move.line.view manager,model_bio_account_move_line_view,account.group_account_manager,1,1,1,1
+access_bio_account_move_line_report_all,bio.account.move.line.report all,model_bio_account_move_line_report,,1,0,0,0

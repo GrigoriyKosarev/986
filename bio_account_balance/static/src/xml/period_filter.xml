@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!-- Period Filter - Date Range Picker -->
+    <t t-name="bio_account_balance.PeriodFilter" owl="1">
+        <div class="o_bio_period_filter d-flex align-items-center gap-2 mb-2">
+            <!-- Quick Filters -->
+            <div class="btn-group" role="group">
+                <button class="btn btn-sm btn-secondary" t-on-click="onThisYear">
+                    This Year
+                </button>
+                <button class="btn btn-sm btn-secondary" t-on-click="onThisMonth">
+                    This Month
+                </button>
+                <button class="btn btn-sm btn-secondary" t-on-click="onLastMonth">
+                    Last Month
+                </button>
+            </div>
+
+            <!-- Date Inputs -->
+            <div class="d-flex align-items-center gap-2">
+                <label class="mb-0">From:</label>
+                <input type="date"
+                       class="form-control form-control-sm"
+                       t-model="state.dateFrom"
+                       t-on-change="onDateFromChange"
+                       lang="en-US"/>
+
+                <label class="mb-0">To:</label>
+                <input type="date"
+                       class="form-control form-control-sm"
+                       t-model="state.dateTo"
+                       t-on-change="onDateToChange"
+                       lang="en-US"/>
+
+                <button class="btn btn-sm btn-primary" t-on-click="applyPeriod">
+                    <i class="fa fa-filter"/> Apply
+                </button>
+            </div>
+        </div>
+    </t>
+
+    <!-- Custom ListView - completely override template -->
+    <t t-name="bio_account_balance.ListView" owl="1">
+        <div class="o_list_view o_view_controller">
+            <!-- Period Filter -->
+            <PeriodFilter t-props="periodFilterProps"/>
+
+            <!-- Original ListView content -->
+            <t t-call="web.ListView"/>
+        </div>
+    </t>
+
+</templates>

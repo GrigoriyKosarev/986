@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="0">
+    <!--
+        Force owl_timeout_suppress.js to load FIRST in web.assets_common
+        by creating ir.asset record with very low sequence (-1000).
+
+        This ensures our console.error patch is installed BEFORE
+        Owl framework captures console.error at initialization.
+    -->
+    <record id="asset_owl_timeout_suppress" model="ir.asset">
+        <field name="name">Owl Timeout Suppressor (Bio Account Balance)</field>
+        <field name="bundle">web.assets_common</field>
+        <field name="path">bio_account_balance/static/src/js/owl_timeout_suppress.js</field>
+        <field name="sequence" eval="-1000"/>
+    </record>
+</odoo>

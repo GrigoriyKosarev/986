@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ════════════════════════════════════════════════════════════
+         SEARCH VIEW
+    ════════════════════════════════════════════════════════════════ -->
+    <record id="view_bio_account_move_line_report_search" model="ir.ui.view">
+        <field name="name">bio.account.move.line.report.search</field>
+        <field name="model">bio.account.move.line.report</field>
+        <field name="arch" type="xml">
+            <search string="Journal Items Balance">
+
+                <field name="partner_id"  string="Partner"/>
+                <field name="account_id"  string="Account"/>
+                <field name="move_name"   string="Journal Entry"/>
+                <field name="ref"         string="Move Ref"/>
+                <field name="line_ref"    string="Ref"/>
+                <field name="period_date" string="Period"/>
+                <field name="company_id"  string="Company"
+                       groups="base.group_multi_company"/>
+
+                <!-- ── Filters ── -->
+                <filter string="Customers"
+                        name="filter_customer"
+                        domain="[('partner_type','=','customer')]"/>
+                <filter string="Vendors"
+                        name="filter_supplier"
+                        domain="[('partner_type','=','supplier')]"/>
+
+                <separator/>
+
+                <!-- Period Filters (passed to SQL via context) -->
+                <filter string="This Year"
+                        name="filter_this_year"
+                        context="{
+                            'period_start': context_today().strftime('%Y-01-01'),
+                            'period_end': context_today().strftime('%Y-%m-%d')
+                        }"/>
+                <filter string="This Month"
+                        name="filter_this_month"
+                        context="{
+                            'period_start': context_today().strftime('%Y-%m-01'),
+                            'period_end': context_today().strftime('%Y-%m-%d')
+                        }"/>
+                <filter string="Last Month"
+                        name="filter_last_month"
+                        context="{
+                            'period_start': (context_today() - relativedelta(months=1)).strftime('%Y-%m-01'),
+                            'period_end': (context_today().replace(day=1) - relativedelta(days=1)).strftime('%Y-%m-%d')
+                        }"/>
+                <separator/>
+                <filter string="Custom Period..."
+                        name="filter_custom"
+                        help="Select custom date range"
+                        icon="fa-calendar"
+                        context="{'open_wizard': True}"/>
+
+                <separator/>
+
+                <filter string="Non-zero Balance Only"
+                        name="filter_nonzero"
+                        domain="[('closing_balance','!=', 0)]"/>
+
+                <!-- ── Grouping ── -->
+                <group string="Group By">
+                    <filter string="Partner"
+                            name="group_partner"
+                            context="{'group_by': 'partner_id'}"/>
+                    <filter string="Account"
+                            name="group_account"
+                            context="{'group_by': 'account_id'}"/>
+                    <filter string="Period"
+                            name="group_period"
+                            context="{'group_by': 'period_date:month'}"/>
+                    <filter string="Partner Type"
+                            name="group_partner_type"
+                            context="{'group_by': 'partner_type'}"/>
+                    <filter string="Entry Type"
+                            name="group_move_type"
+                            context="{'group_by': 'move_type'}"/>
+                    <filter string="Company"
+                            name="group_company"
+                            context="{'group_by': 'company_id'}"
+                            groups="base.group_multi_company"/>
+                </group>
+
+
+            </search>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════
+         TREE VIEW  (Period → Partner → Journal Entry)
+    ════════════════════════════════════════════════════════════════ -->
+    <record id="view_bio_account_move_line_report_tree" model="ir.ui.view">
+        <field name="name">bio.account.move.line.report.tree</field>
+        <field name="model">bio.account.move.line.report</field>
+        <field name="arch" type="xml">
+            <tree string="Journal Items Balance"
+                  js_class="bio_account_move_line_report_list"
+                  default_order="partner_id,period_date,date,move_id"
+                  create="false" edit="false" delete="false">
+
+                <!-- Default grouping: Period → Partner -->
+                <field name="period_date"     string="Period"     optional="show"/>
+                <field name="partner_id"      string="Partner"    optional="show"/>
+                <field name="partner_type"    string="Type"       optional="show"/>
+                <field name="date"            string="Date"       optional="show"/>
+                <field name="move_id"         string="Entry"      optional="show"/>
+                <field name="move_name"       string="Number"     optional="show"/>
+                <field name="account_id"      string="Account"    optional="show"/>
+                <field name="move_type"       string="Entry Type" optional="show"/>
+                <field name="ref"             string="Move Ref"   optional="show"/>
+                <field name="line_ref"        string="Ref"        optional="show"/>
+                <field name="date_maturity"   string="Due Date"   optional="hide"/>
+
+                <!-- Amounts -->
+                <field name="currency_id"     invisible="1"/>
+
+                <!-- Document balances (shown for individual documents) -->
+                <field name="opening_balance" string="Initial Bal. (Doc)"
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id'}"
+                       optional="show"/>
+                <field name="debit"           string="Debit"
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id'}"
+                       optional="show"
+                       sum="Total Debit"/>
+                <field name="credit"          string="Credit"
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id'}"
+                       optional="show"
+                       sum="Total Credit"/>
+                <field name="closing_balance" string="End Bal. (Doc)"
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id'}"
+                       optional="show"/>
+
+                <!-- Partner balances (shown when GROUP BY partner) -->
+                <field name="partner_opening_balance" string="Partner Initial Bal."
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id'}"
+                       optional="hide"/>
+                <field name="partner_closing_balance" string="Partner End Bal."
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id'}"
+                       optional="hide"/>
+
+                <!-- Period balances (shown when GROUP BY period) -->
+                <field name="period_opening_balance" string="Period Initial Bal."
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id'}"
+                       optional="hide"/>
+                <field name="period_closing_balance" string="Period End Bal."
+                       widget="monetary"
+                       options="{'currency_field': 'currency_id'}"
+                       optional="hide"/>
+
+            </tree>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════
+         PIVOT VIEW
+    ════════════════════════════════════════════════════════════════ -->
+    <record id="view_bio_account_move_line_report_pivot" model="ir.ui.view">
+        <field name="name">bio.account.move.line.report.pivot</field>
+        <field name="model">bio.account.move.line.report</field>
+        <field name="arch" type="xml">
+            <pivot string="Journal Items Balance (Pivot)" disable_linking="false">
+                <field name="partner_id"      type="row"/>
+                <field name="account_id"      type="row"/>
+                <field name="period_date"     type="col" interval="month"/>
+
+                <!-- Only summable fields (opening/closing balance cannot be summed correctly) -->
+                <field name="debit"           type="measure" string="Debit"/>
+                <field name="credit"          type="measure" string="Credit"/>
+                <field name="balance"         type="measure" string="Balance"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════
+         ACTION
+    ════════════════════════════════════════════════════════════════ -->
+    <record id="action_bio_account_move_line_report" model="ir.actions.act_window">
+        <field name="name">Journal Items Balance</field>
+        <field name="res_model">bio.account.move.line.report</field>
+        <field name="view_mode">tree</field>
+<!--        <field name="view_mode">tree,pivot</field>-->
+        <field name="context">{
+            'search_default_filter_this_year': 1,
+            'search_default_group_period': 1,
+            'search_default_group_partner': 1
+        }</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data to display
+            </p>
+            <p>
+                Balance report for vendors and customers.
+                Use filters to select partner and period.
+            </p>
+        </field>
+    </record>
+
+    <!-- ════════════════════════════════════════════════════════════
+         MENU: Accounting → Reporting → Audit Reports → Journal Items Balance
+    ════════════════════════════════════════════════════════════════ -->
+
+<!--    &lt;!&ndash; Audit Reports submenu &ndash;&gt;-->
+<!--    <menuitem id="menu_audit_reports"-->
+<!--              name="Audit Reports"-->
+<!--              parent="account.menu_finance_reports"-->
+<!--              sequence="100"/>-->
+
+    <!-- Journal Items Balance menu item -->
+    <menuitem id="menu_bio_account_move_line_report"
+              name="Journal Items Balance"
+              parent="account_reports.account_reports_audit_reports_menu"
+              action="action_bio_account_move_line_report"
+              sequence="10"/>
+
+</odoo>

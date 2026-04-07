@@ -1,0 +1,191 @@
+// ============================================================================
+// Period Filter Widget & Button Styles
+// ============================================================================
+
+.bio_period_filter_widget,
+.bio_period_filter_button {
+    display: inline-block;
+    margin-right: 8px;
+
+    // Period button
+    .o_period_filter_button,
+    .o_period_filter_btn {
+        font-size: 13px;
+        padding: 5px 12px;
+        height: 32px;
+        border-color: #ced4da;
+        background-color: #fff;
+        color: #495057;
+
+        &:hover {
+            background-color: #f8f9fa;
+            border-color: #adb5bd;
+            color: #212529;
+        }
+
+        &:focus {
+            box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+        }
+
+        i {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+    }
+
+    // Dropdown menu items
+    .dropdown-menu {
+        min-width: 220px;
+        padding: 6px 0;
+        font-size: 13px;
+
+        .dropdown-item {
+            padding: 8px 16px;
+            cursor: pointer;
+
+            i {
+                width: 18px;
+                text-align: center;
+                opacity: 0.7;
+            }
+
+            &:hover {
+                background-color: #f8f9fa;
+
+                i {
+                    opacity: 1;
+                }
+            }
+
+            &.text-muted {
+                font-size: 12px;
+                color: #6c757d !important;
+
+                i {
+                    opacity: 0.5;
+                }
+            }
+        }
+
+        .dropdown-divider {
+            margin: 6px 0;
+        }
+    }
+}
+
+// ============================================================================
+// Custom Period Modal
+// ============================================================================
+
+.o_period_custom_modal {
+    .modal-dialog {
+        max-width: 500px;
+    }
+
+    .modal-header {
+        background-color: #f8f9fa;
+        border-bottom: 2px solid #dee2e6;
+        padding: 16px 24px;
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #212529;
+
+            i {
+                color: #0d6efd;
+                font-size: 16px;
+            }
+        }
+
+        .btn-close {
+            font-size: 12px;
+        }
+    }
+
+    .modal-body {
+        padding: 24px;
+
+        .form-label {
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #495057;
+        }
+
+        .form-control {
+            font-size: 13px;
+            height: 38px;
+
+            &:focus {
+                border-color: #0d6efd;
+                box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+            }
+        }
+
+        .alert-info {
+            background-color: #e7f3ff;
+            border-color: #b3d9ff;
+            color: #004085;
+            padding: 12px 16px;
+            font-size: 12px;
+
+            i {
+                color: #0d6efd;
+            }
+        }
+    }
+
+    .modal-footer {
+        background-color: #f8f9fa;
+        border-top: 2px solid #dee2e6;
+        padding: 12px 24px;
+
+        .btn {
+            font-size: 13px;
+            padding: 7px 16px;
+            height: 36px;
+        }
+
+        .btn-primary {
+            i {
+                font-size: 11px;
+            }
+        }
+    }
+}
+
+// ============================================================================
+// Responsive adjustments
+// ============================================================================
+
+@media (max-width: 576px) {
+    .bio_period_filter_widget {
+        .o_period_filter_button {
+            span {
+                display: none; // Hide text on mobile, keep icon only
+            }
+        }
+    }
+
+    .o_period_custom_modal {
+        .modal-dialog {
+            max-width: 95%;
+            margin: 1rem auto;
+        }
+
+        .modal-body {
+            padding: 16px;
+
+            .row {
+                .col-md-6 {
+                    width: 100%;
+                    margin-bottom: 12px;
+
+                    &:last-child {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+        }
+    }
+}
